@@ -40,38 +40,38 @@ def main():
     temp = []
 
     while True:
-        ret, frame = cap.read()
-        if ret:
-            result = model(frame, conf = 0.5, agnostic_nms = True)[0]
-            detections = sv.Detections.from_ultralytics(result)
-            # detections = detections[detections.class_id !=0]
-            detections = byte_tracker.update_with_detections(detections)
-            if len(detections.tracker_id) != 0 and max(detections.tracker_id) >= 10:
-                    byte_tracker.reset()
-            if not np.array_equal(temp, detections.tracker_id):
-                temp = detections.tracker_id  
-                for x in detections.class_id: 
-                    if x in [2,3,4,5]:
-                        with open("label.txt", "a") as myfile:
-                            myfile.write(f"bbox: {detections.xyxy}\n conf: {detections.confidence}\n class: {detections.class_id}\n tracker_id: {detections.tracker_id}\n")
-            labels = [
-                f"Id:{tracker_id} {model.model.names[class_id]} {confidence:0.2f}"
-            for _, _, confidence, class_id, tracker_id,_
-            in detections
-        ]
+        frame = cap.capture_array()
+        
+        result = model(frame, conf = 0.5, agnostic_nms = True)[0]
+        detections = sv.Detections.from_ultralytics(result)
+        # detections = detections[detections.class_id !=0]
+        detections = byte_tracker.update_with_detections(detections)
+        if len(detections.tracker_id) != 0 and max(detections.tracker_id) >= 10:
+                byte_tracker.reset()
+        if not np.array_equal(temp, detections.tracker_id):
+            temp = detections.tracker_id  
+            for x in detections.class_id: 
+                if x in [2,3,4,5]:
+                    with open("label.txt", "a") as myfile:
+                        myfile.write(f"bbox: {detections.xyxy}\n conf: {detections.confidence}\n class: {detections.class_id}\n tracker_id: {detections.tracker_id}\n")
+        labels = [
+            f"Id:{tracker_id} {model.model.names[class_id]} {confidence:0.2f}"
+        for _, _, confidence, class_id, tracker_id,_
+        in detections
+    ]
 
-            frame = box_annotator.annotate(
-            scene=frame,
-            detections=detections,
-            labels = labels
-            )
-            
-            cv2.imshow('yolov8', frame)
+        frame = box_annotator.annotate(
+        scene=frame,
+        detections=detections,
+        labels = labels
+        )
+        
+        cv2.imshow('yolov8', frame)
 
-            if (cv2.waitKey(30) == 27): #escape key
-                break
+        if (cv2.waitKey(30) == 27): #escape key
+            break
 
-            print(frame.shape)
+        print(frame.shape)
 
 if __name__ == "__main__":
     main()
