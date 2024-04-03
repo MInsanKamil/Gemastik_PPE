@@ -41,7 +41,8 @@ def main():
         frame = cap.capture_array()
         if frame.shape[2] == 4:
             frame = frame[:, :, :3]
-        result = model(frame, conf = 0.5, agnostic_nms = True)[0]
+        frame_copy = frame.copy()
+        result = model(frame_copy, conf = 0.5, agnostic_nms = True)[0]
         detections = sv.Detections.from_ultralytics(result)
         # detections = detections[detections.class_id !=0]
         detections = byte_tracker.update_with_detections(detections)
@@ -54,7 +55,7 @@ def main():
     ]
 
         frame = box_annotator.annotate(
-        scene=frame,
+        scene=frame_copy,
         detections=detections,
         labels = labels
         )
