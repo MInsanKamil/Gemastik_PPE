@@ -39,7 +39,8 @@ def main():
 
     while True:
         frame = cap.capture_array()
-        
+        if frame.shape[2] == 4:
+            frame = frame[:, :, :3]
         result = model(frame, conf = 0.5, agnostic_nms = True)[0]
         detections = sv.Detections.from_ultralytics(result)
         # detections = detections[detections.class_id !=0]
