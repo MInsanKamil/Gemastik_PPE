@@ -27,7 +27,6 @@ config={
 }
 firebase = pyrebase.initialize_app(config)
 localpath = "detection.jpg"
-cloudpath = "detections/detection.jpg"
 
 
 
@@ -64,7 +63,7 @@ def main():
     )
 
     temp = []
-
+    count = 1
     while True:
         ret, frame = cap.read()
         if ret:
@@ -86,21 +85,34 @@ def main():
             labels = labels
             )
 
-            
+            class_mapping = {
+                0: 'Gloves',
+                1: 'Helmet',
+                2: 'No-Gloves',
+                3: 'No-Helmet',
+                4: 'No-Shoes',
+                5: 'No-Vest',
+                6: 'Shoes',
+                7: 'Vest'
+            }
             if not np.array_equal(temp, detections.tracker_id):
                 for x in detections.class_id: 
                     if x in [2,3,4,5] and not np.array_equal(temp, detections.tracker_id):
-                        date_time = datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
+                        date_time = datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S")
                         cv2.imwrite("detection.jpg", frame)
+                        cloudpath = f"detections/detection{count}.jpg"
                         firebase.storage().child(cloudpath).put(localpath)
                         doc_ref = db.collection(u"detections").document(date_time)
                         doc_ref.set({
                             "image_url": firebase.storage().child(cloudpath).get_url(None),
+                            "attribute" : [class_mapping[class_id] for class_id in detections.class_id],
+                            "time": date_time,
                 })
                         # with open("label.txt", "a") as myfile:
                         #     myfile.write(f"bbox: {detections.xyxy}\n conf: {detections.confidence}\n class: {detections.class_id}\n tracker_id: {detections.tracker_id}\n")
                         temp = detections.tracker_id
                         os.remove("detection.jpg")
+                        count += 1
             
             print(frame)
             cv2.imshow('yolov8', frame)
