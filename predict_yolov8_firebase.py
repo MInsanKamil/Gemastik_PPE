@@ -98,11 +98,11 @@ def main():
             if not np.array_equal(temp, detections.tracker_id):
                 for x in detections.class_id: 
                     if x in [2,3,4,5] and not np.array_equal(temp, detections.tracker_id):
-                        date_time = datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S")
+                        date_time = datetime.datetime.now()
                         cv2.imwrite("detection.jpg", frame)
                         cloudpath = f"detections/detection{count}.jpg"
                         firebase.storage().child(cloudpath).put(localpath)
-                        doc_ref = db.collection(u"detections").document(date_time)
+                        doc_ref = db.collection(u"detections").document(date_time.strftime("%d-%m-%Y_%H:%M:%S"))
                         doc_ref.set({
                             "image_url": firebase.storage().child(cloudpath).get_url(None),
                             "attribute" : [class_mapping[class_id] for class_id in detections.class_id],
