@@ -71,7 +71,7 @@ def main():
     temp = []
     count = 1
     while True:
-        frame = cap.read()
+        frame = cap.capture_array()
         if frame.shape[2] == 4:
             frame = frame[:, :, :3]
         frame_copy = frame.copy()
