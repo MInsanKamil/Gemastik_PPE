@@ -69,7 +69,7 @@ def main():
     )
 
     temp = []
-    count = 1
+
     while True:
         frame = cap.capture_array()
         if frame.shape[2] == 4:
@@ -109,7 +109,7 @@ def main():
                     attribute = [class_mapping[class_id] for class_id in detections.class_id]
                     date_time = datetime.datetime.now()
                     cv2.imwrite("detection.jpg", frame)
-                    cloudpath = f"detections/detection{count}.jpg"
+                    cloudpath = f"detections/{date_time.strftime("%d-%m-%Y_%H:%M:%S")}.jpg"
                     firebase.storage().child(cloudpath).put(localpath)
                     doc_ref = db.collection(u"detections").document(date_time.strftime("%d-%m-%Y_%H:%M:%S"))
                     doc_ref.set({
@@ -123,7 +123,6 @@ def main():
                     #     myfile.write(f"bbox: {detections.xyxy}\n conf: {detections.confidence}\n class: {detections.class_id}\n tracker_id: {detections.tracker_id}\n")
                     temp = detections.tracker_id
                     os.remove("detection.jpg")
-                    count += 1
         
         print(frame)
         cv2.imshow('yolov8', frame)
