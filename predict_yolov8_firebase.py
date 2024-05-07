@@ -8,6 +8,7 @@ import firebase_admin
 import pyrebase
 from firebase_admin import credentials
 from firebase_admin import firestore
+from firebase_admin import messaging
 # from google.cloud import storage
 import os
 
@@ -29,7 +30,12 @@ firebase = pyrebase.initialize_app(config)
 localpath = "detection.jpg"
 
 
-
+def send_to_topic(topic, title, body):
+  message = messaging.Message(
+    notification=messaging.Notification(title=title, body=body),
+    topic=topic
+  )
+  messaging.send(message)
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description = "YOLOv8 Live")
@@ -71,7 +77,7 @@ def main():
             detections = sv.Detections.from_ultralytics(result)
             # detections = detections[detections.class_id !=0]
             detections = byte_tracker.update_with_detections(detections)
-            if len(detections.tracker_id) != 0 and max(detections.tracker_id) >= 10:
+            if len(detections.tracker_id) != 0 and max(detections.tracker_id) >= 100:
                     byte_tracker.reset()
             labels = [
                 f"Id:{tracker_id} {model.model.names[class_id]} {confidence:0.2f}"
@@ -98,6 +104,7 @@ def main():
             if not np.array_equal(temp, detections.tracker_id):
                 for x in detections.class_id: 
                     if x in [2,3,4,5] and not np.array_equal(temp, detections.tracker_id):
+                        attribute = [class_mapping[class_id] for class_id in detections.class_id]
                         date_time = datetime.datetime.now()
                         cv2.imwrite("detection.jpg", frame)
                         cloudpath = f"detections/detection{count}.jpg"
@@ -105,9 +112,11 @@ def main():
                         doc_ref = db.collection(u"detections").document(date_time.strftime("%d-%m-%Y_%H:%M:%S"))
                         doc_ref.set({
                             "image_url": firebase.storage().child(cloudpath).get_url(None),
-                            "attribute" : [class_mapping[class_id] for class_id in detections.class_id],
+                            "attribute" : attribute,
                             "time": date_time,
                 })
+                        pelanggaran = ", ".join(class_mapping[class_id][3:] for class_id in detections.class_id if class_id in [2,3,4,5])
+                        send_to_topic("detection", "Pelanggaran", f"Terjadi pelanggaran tidak menggunakan {pelanggaran} di lapangan")
                         # with open("label.txt", "a") as myfile:
                         #     myfile.write(f"bbox: {detections.xyxy}\n conf: {detections.confidence}\n class: {detections.class_id}\n tracker_id: {detections.tracker_id}\n")
                         temp = detections.tracker_id
