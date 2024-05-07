@@ -108,10 +108,11 @@ def main():
                 if x in [2,3,4,5] and not np.array_equal(temp, detections.tracker_id):
                     attribute = [class_mapping[class_id] for class_id in detections.class_id]
                     date_time = datetime.datetime.now()
+                    date_time_str = date_time.strftime("%d-%m-%Y_%H:%M:%S")
                     cv2.imwrite("detection.jpg", frame)
-                    cloudpath = f"detections/{date_time.strftime("%d-%m-%Y_%H:%M:%S")}.jpg"
+                    cloudpath = f"detections/{date_time_str}.jpg"
                     firebase.storage().child(cloudpath).put(localpath)
-                    doc_ref = db.collection(u"detections").document(date_time.strftime("%d-%m-%Y_%H:%M:%S"))
+                    doc_ref = db.collection(u"detections").document(date_time_str)
                     doc_ref.set({
                         "image_url": firebase.storage().child(cloudpath).get_url(None),
                         "attribute" : attribute,
