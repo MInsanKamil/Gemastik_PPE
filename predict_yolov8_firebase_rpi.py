@@ -125,13 +125,13 @@ def main():
                     temp = detections.tracker_id
                     os.remove("detection.jpg")
         
-        print(frame)
-        cv2.imshow('yolov8', frame)
+        # print(frame)
+        # cv2.imshow('yolov8', frame)
 
         if (cv2.waitKey(30) == 27): #escape key
             break
 
-        print(frame.shape)
+        # print(frame.shape)
 
 if __name__ == "__main__":
     main()
