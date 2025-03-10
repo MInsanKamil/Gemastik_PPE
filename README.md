@@ -8,6 +8,8 @@ Deteksi Penggunaan Alat Pelindung Diri (APD), program akan mengirimkan notifikas
 
 ## <div align="center">Dokumentasi</div>
 
+<summary>Run Program</summary>
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -20,4 +22,4 @@ git clone https://github.com/MInsanKamil/Gemastik_PPE.git
 cd Gemastik_PPE
 ```
 
-- Running file predict_yolov8_firebase_rpi_multithread.py
+Terakhir, Run file predict_yolov8_firebase_rpi_multithread.py
