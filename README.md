@@ -22,4 +22,4 @@ cd Gemastik_PPE
 pip install -r requirements.txt
 ```
 
-Terakhir, Run file predict_yolov8_firebase_rpi_multithread.py
+Ketika proses install requirements telah selesai, Run file predict_yolov8_firebase_rpi_multithread.py
