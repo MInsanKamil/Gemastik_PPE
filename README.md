@@ -5,3 +5,19 @@ Deteksi Penggunaan Alat Pelindung Diri (APD), program akan mengirimkan notifikas
 
 - Hasil Pendeteksian Tidak Menggunakan APD:
 ![Alt text](images/image16.jpg)
+
+## <div align="center">Dokumentasi</div>
+
+```bash
+pip install -r requirements.txt
+```
+
+```bash
+git clone https://github.com/MInsanKamil/Gemastik_PPE.git
+```
+
+```bash
+cd Gemastik_PPE
+```
+
+running predict_yolov8_firebase_rpi_multithread.py
