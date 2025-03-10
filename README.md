@@ -8,7 +8,7 @@ Deteksi Penggunaan Alat Pelindung Diri (APD), program akan mengirimkan notifikas
 
 ## <div align="center">Dokumentasi</div>
 
-<summary>Run Program</summary>
+### Run Program
 
 ```bash
 pip install -r requirements.txt
