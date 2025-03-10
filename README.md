@@ -20,4 +20,4 @@ git clone https://github.com/MInsanKamil/Gemastik_PPE.git
 cd Gemastik_PPE
 ```
 
-running predict_yolov8_firebase_rpi_multithread.py
+- Running file predict_yolov8_firebase_rpi_multithread.py
