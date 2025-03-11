@@ -8,7 +8,7 @@ Deteksi Penggunaan Alat Pelindung Diri (APD), program akan mengirimkan notifikas
 
 ## <div align="center">Dokumentasi</div>
 
-### Run Program
+### Running a Program on Raspberry Pi 4
 
 ```bash
 git clone https://github.com/MInsanKamil/Gemastik_PPE.git
